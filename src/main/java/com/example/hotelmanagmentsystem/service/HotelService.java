@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface HotelService
 {
+
     public List<HotelResponse> search (HotelSearchRequest hotelSearchRequest) ;
     public List<HotelResponse> findAll () ;
     public HotelResponse findById (Long id);

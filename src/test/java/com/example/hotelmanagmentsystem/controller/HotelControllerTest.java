@@ -1,32 +1,44 @@
 package com.example.hotelmanagmentsystem.controller;
-
-import com.example.hotelmanagmentsystem.dto.error.ErrorResponse;
 import com.example.hotelmanagmentsystem.dto.hotel.AddHotelRequest;
 import com.example.hotelmanagmentsystem.dto.hotel.HotelResponse;
 import com.example.hotelmanagmentsystem.dto.hotel.HotelSearchRequest;
 import com.example.hotelmanagmentsystem.enums.HotelStars;
 import com.example.hotelmanagmentsystem.exceptionHandler.AlreadyExistException;
+import com.example.hotelmanagmentsystem.security.JwtFilter;
+import com.example.hotelmanagmentsystem.security.JwtService;
 import com.example.hotelmanagmentsystem.service.HotelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HotelController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class HotelControllerTest
 {
     @Autowired
     MockMvc mockMvc ;
+    @MockBean
+    private JwtFilter jwtFilter;
+
+    @MockBean
+    private JwtService jwtService;
+
+    @MockBean
+    private UserDetailsService userDetailsService;
     @MockBean
     HotelService hotelService ;
     private HotelResponse hotelResponse ;
@@ -57,7 +69,7 @@ public class HotelControllerTest
                                     "phoneNumber" : "01111111111"
                                 }
                                 """)
-               ).andExpect(status().isOk())
+               ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.address").value("cairo"))
                 .andExpect(jsonPath("$.name").value("hilton"));
     }
@@ -97,6 +109,7 @@ public class HotelControllerTest
                         .content(objectMapper.writeValueAsString(hotelSearchRequest)
                         )
         )
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(hotelResponse.getName()))
                 .andExpect(jsonPath("$[0].id").value(1L));
