@@ -4,5 +4,5 @@ import com.example.hotelmanagmentsystem.dto.booking.BookingRequest;
 import com.example.hotelmanagmentsystem.entity.Booking;
 
 public interface BookingService {
-    public Booking create (BookingRequest bookingRequest) ;
+    public Booking createBooking (BookingRequest bookingRequest) ;
 }

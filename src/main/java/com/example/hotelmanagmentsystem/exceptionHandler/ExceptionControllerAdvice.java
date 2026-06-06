@@ -2,10 +2,12 @@ package com.example.hotelmanagmentsystem.exceptionHandler;
 
 
 import com.example.hotelmanagmentsystem.dto.error.ErrorResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +27,20 @@ public class ExceptionControllerAdvice
     {
         ErrorResponse errorResponse =
                 new ErrorResponse(HttpStatus.CONFLICT.value(), alreadyExistException.getMessage(), LocalDateTime.now()) ;
+        return new ResponseEntity<>(errorResponse,HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> badRequest(BadRequestException badRequestException)
+    {
+        ErrorResponse errorResponse =
+                new ErrorResponse(HttpStatus.BAD_REQUEST.value(), badRequestException.getMessage(), LocalDateTime.now()) ;
+        return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> BusinessException(BusinessException businessException)
+    {
+        ErrorResponse errorResponse =
+                new ErrorResponse(HttpStatus.CONFLICT.value(), businessException.getMessage(), LocalDateTime.now()) ;
         return new ResponseEntity<>(errorResponse,HttpStatus.CONFLICT);
     }
 }

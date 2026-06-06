@@ -38,8 +38,7 @@ public class Booking
     public Booking() {
     }
 
-    public Booking(Long id, BigDecimal price, LocalDate checkIn, LocalDate checkOut, Room room, User user) {
-        this.id = id;
+    public Booking( BigDecimal price, LocalDate checkIn, LocalDate checkOut, Room room, User user) {
         this.price = price;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -81,10 +80,6 @@ public class Booking
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Room getRoom() {
