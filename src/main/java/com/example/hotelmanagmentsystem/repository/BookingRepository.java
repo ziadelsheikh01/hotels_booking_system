@@ -15,7 +15,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long>
     @Query("""
             select count(b)>0
             from Booking b 
-            where b.room.roomId = :roomId 
+            where b.room.id =:roomId 
             and
             :checkIn < b.checkOut
             and

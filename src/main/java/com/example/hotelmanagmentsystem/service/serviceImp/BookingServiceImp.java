@@ -1,6 +1,7 @@
 package com.example.hotelmanagmentsystem.service.serviceImp;
 
 import com.example.hotelmanagmentsystem.dto.booking.BookingRequest;
+import com.example.hotelmanagmentsystem.dto.booking.BookingResponse;
 import com.example.hotelmanagmentsystem.entity.Booking;
 import com.example.hotelmanagmentsystem.entity.Room;
 import com.example.hotelmanagmentsystem.entity.User;
@@ -14,11 +15,12 @@ import com.example.hotelmanagmentsystem.repository.BookingRepository;
 import com.example.hotelmanagmentsystem.repository.RoomRepository;
 import com.example.hotelmanagmentsystem.repository.UserRepository;
 import com.example.hotelmanagmentsystem.service.BookingService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
-
+@Service
 public class BookingServiceImp implements BookingService {
 
     private final RoomRepository roomRepository ;
@@ -35,7 +37,7 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     @Transactional
-    public Booking createBooking(BookingRequest bookingRequest)
+    public BookingResponse createBooking(BookingRequest bookingRequest)
     {
         if (!bookingRequest.getCheckIn()
                 .isBefore(bookingRequest.getCheckOut())) {
@@ -67,7 +69,7 @@ public class BookingServiceImp implements BookingService {
         booking.setPrice(room.getPrice().multiply(BigDecimal.valueOf(nights)));
         booking.setRoom(room);
         booking.setUser(user);
-       return bookingRepository.save(booking);
+       return bookingMapper.toDto(bookingRepository.save(booking));
 
     }
 }

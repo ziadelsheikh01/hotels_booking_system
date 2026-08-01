@@ -1,20 +1,27 @@
 package com.example.hotelmanagmentsystem.dto.hotel;
 
 import com.example.hotelmanagmentsystem.enums.HotelStars;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
 public class HotelSearchRequest
 {
+    @Schema(description = "Hotel name" , example = "Hilton Cairo")
     private String name ;
 
+    @Schema(description = "max price" , example = "1200")
     private BigDecimal maxPrice ;
 
+    @Schema(description = "Hotel rating" ,example = "ONE_STAR")
     private HotelStars rating ;
 
+    @Schema(description = "Hotel address" , example = "Nasr City, Cairo")
     private  String address ;
 
+    @Schema(description = "Page number " , example = "3")
     private  Integer page ;
+    @Schema(description = "page size" , example = "7")
     private  Integer pageSize ;
 
     public HotelSearchRequest() {

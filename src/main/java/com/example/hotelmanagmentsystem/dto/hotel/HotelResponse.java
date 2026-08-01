@@ -1,17 +1,23 @@
 package com.example.hotelmanagmentsystem.dto.hotel;
 
 import com.example.hotelmanagmentsystem.enums.HotelStars;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 public class HotelResponse
 {
+    @Schema(description = "Hotel Id" , example = "2")
     private Long id ;
+    @Schema(description = "Hotel name" , example = "Hilton Cairo")
     private String name ;
 
+    @Schema(description = "Hotel Address" , example = "Nasr City, Cairo")
     private  String address ;
-
+    @Schema(description = "Hotel phone number" ,example = "01111112555")
     private  String phoneNumber ;
+    @Schema(description = "Hotel rating" , example = "ONE_STAR")
     private HotelStars rating ;
+
 
     public HotelResponse(Long id, String name, String address, String phoneNumber, HotelStars rating) {
         this.id = id;

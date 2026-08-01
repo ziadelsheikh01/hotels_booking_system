@@ -96,7 +96,7 @@ public class HotelServiceImp implements HotelService
         }
         catch (DataIntegrityViolationException dataIntegrityViolationException)
         {
-            throw  new AlreadyExistException("the hotel is already added before") ;
+            throw  new AlreadyExistException("the hotel name is already exist ") ;
         }
         hotelRepository.save(hotel);
     }

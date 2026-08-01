@@ -12,4 +12,5 @@ public interface RoomMapper
 {
     public List<RoomResponse> toDto(List<Room> rooms);
     public Room toEntity (RoomRequest roomRequest);
+    public RoomResponse toDto (Room room) ;
 }
