@@ -1,5 +1,6 @@
 package com.example.hotelmanagmentsystem.dto.user;
 
+import com.example.hotelmanagmentsystem.enums.Role;
 import jakarta.validation.constraints.*;
 
 public class AddUserRequest
@@ -21,13 +22,16 @@ public class AddUserRequest
     )
     private String password;
 
+   // @NotBlank(message = "role is required")
+    private Role role ;
 
 
-    public AddUserRequest(String firstName, String lastName, String email, String password) {
+    public AddUserRequest(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -60,6 +64,14 @@ public class AddUserRequest
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override

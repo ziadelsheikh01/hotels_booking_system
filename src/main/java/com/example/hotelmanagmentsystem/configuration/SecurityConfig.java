@@ -4,6 +4,7 @@ import com.example.hotelmanagmentsystem.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -35,8 +36,16 @@ public class SecurityConfig
         httpSecurity.csrf(customizer -> customizer.disable());
         httpSecurity.httpBasic(customizer->customizer.disable());
         httpSecurity.authenticationProvider(authenticationProvider());
-        httpSecurity.authorizeHttpRequests(customizer->
-                customizer.anyRequest().permitAll()
+        httpSecurity.authorizeHttpRequests(customizer-> customizer.
+                        requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/hotel/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/hotel/**").hasAnyRole("HotelManager" , "ADMIN")
+                        .requestMatchers(HttpMethod.POST , "/api/booking").hasAnyRole("HotelManager" ,"ADMIN","USER")
+                        .requestMatchers(HttpMethod.GET , "/api/room/**").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/api/hotel/{hotelId}/room").authenticated()
+                        .anyRequest().authenticated()
+
+
         ).sessionManagement(customizer->customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
