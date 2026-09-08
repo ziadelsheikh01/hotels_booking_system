@@ -1,5 +1,7 @@
 package com.example.hotelmanagmentsystem.configuration;
 
+import com.example.hotelmanagmentsystem.security.CustomAccessDeniedHandler;
+import com.example.hotelmanagmentsystem.security.CustomAuthenticationEntryPoint;
 import com.example.hotelmanagmentsystem.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +25,14 @@ public class SecurityConfig
 {
     private  final JwtFilter jwtFilter ;
     private  final UserDetailsService userDetailsService ;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-
-    public SecurityConfig(JwtFilter jwtFilter, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtFilter jwtFilter, UserDetailsService userDetailsService, CustomAccessDeniedHandler accessDeniedHandler, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.jwtFilter = jwtFilter;
         this.userDetailsService = userDetailsService;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -38,16 +43,25 @@ public class SecurityConfig
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.authorizeHttpRequests(customizer-> customizer.
                         requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/hotel/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/hotel/**").hasAnyRole("HotelManager" , "ADMIN")
                         .requestMatchers(HttpMethod.POST , "/api/booking").hasAnyRole("HotelManager" ,"ADMIN","USER")
                         .requestMatchers(HttpMethod.GET , "/api/room/**").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/hotel/{hotelId}/room").authenticated()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
 
 
         ).sessionManagement(customizer->customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(customizer->customizer
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler));
 
         return httpSecurity.build();
     }

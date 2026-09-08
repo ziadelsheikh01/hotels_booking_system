@@ -4,6 +4,7 @@ package com.example.hotelmanagmentsystem.exceptionHandler;
 import com.example.hotelmanagmentsystem.dto.error.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -41,5 +42,13 @@ public class ExceptionControllerAdvice
         ErrorResponse errorResponse =
                 new ErrorResponse(HttpStatus.CONFLICT.value(), businessException.getMessage(), LocalDateTime.now()) ;
         return new ResponseEntity<>(errorResponse,HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity TokenExpiredException(TokenExpiredException tokenExpiredException)
+    {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), tokenExpiredException.getMessage(),LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse,HttpStatus.UNAUTHORIZED);
     }
 }

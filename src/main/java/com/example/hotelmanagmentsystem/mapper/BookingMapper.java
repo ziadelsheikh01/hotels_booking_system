@@ -6,6 +6,8 @@ import com.example.hotelmanagmentsystem.entity.Booking;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring" ,
 uses = RoomMapper.class)
 public interface BookingMapper
@@ -14,4 +16,6 @@ public interface BookingMapper
 
     @Mapping(target = "userId" , source = "user.id")
     public BookingResponse toDto (Booking booking);
+
+    public List<BookingResponse> toDto(List<Booking> bookings);
 }

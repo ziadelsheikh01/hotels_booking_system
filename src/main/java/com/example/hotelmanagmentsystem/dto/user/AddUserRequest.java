@@ -22,16 +22,12 @@ public class AddUserRequest
     )
     private String password;
 
-   // @NotBlank(message = "role is required")
-    private Role role ;
 
-
-    public AddUserRequest(String firstName, String lastName, String email, String password, Role role) {
+    public AddUserRequest(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public String getFirstName() {
@@ -66,13 +62,6 @@ public class AddUserRequest
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     @Override
     public String toString() {

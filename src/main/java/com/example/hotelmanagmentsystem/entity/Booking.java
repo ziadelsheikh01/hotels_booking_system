@@ -1,44 +1,49 @@
 package com.example.hotelmanagmentsystem.entity;
 
+import com.example.hotelmanagmentsystem.enums.BookingStatus;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
-@Table(name = "booking"
-, uniqueConstraints = @UniqueConstraint(columnNames = {"room_id" , "check_in" , "check_out"})
-)
-public class Booking
-{
+@Table(name = "booking",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"room_id", "check_in", "check_out"}))
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private  Long id ;
-    @Column(name = "price" , nullable = false)
-    private BigDecimal price ;
-    @Column(name = "check_in" ,nullable = false)
-    private LocalDate checkIn ;
-    @Column(name = "check_out" ,nullable = false)
-    private LocalDate checkOut ;
-    @Column(name = "created_at" ,nullable = false)
-    private LocalDateTime createdAt ;
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "room_id" ,nullable = false)
-    private Room room ;
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.LAZY , optional = false)
-    @JoinColumn(name = "user_id",nullable = false)
-    private User user ;
+    @Column(name = "check_in", nullable = false)
+    private LocalDate checkIn;
+
+    @Column(name = "check_out", nullable = false)
+    private LocalDate checkOut;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private BookingStatus status = BookingStatus.CONFIRMED;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Booking() {
     }
 
-    public Booking( BigDecimal price, LocalDate checkIn, LocalDate checkOut, Room room, User user) {
+    public Booking(BigDecimal price, LocalDate checkIn, LocalDate checkOut, Room room, User user) {
         this.price = price;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -49,7 +54,11 @@ public class Booking
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
+        if (this.status == null) {
+            this.status = BookingStatus.CONFIRMED;
+        }
     }
+
     public Long getId() {
         return id;
     }
@@ -82,6 +91,14 @@ public class Booking
         return createdAt;
     }
 
+    public BookingStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookingStatus status) {
+        this.status = status;
+    }
+
     public Room getRoom() {
         return room;
     }
@@ -106,6 +123,7 @@ public class Booking
                 ", checkIn=" + checkIn +
                 ", checkOut=" + checkOut +
                 ", createdAt=" + createdAt +
+                ", status=" + status +
                 '}';
     }
 }

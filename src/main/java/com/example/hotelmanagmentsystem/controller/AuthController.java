@@ -1,27 +1,24 @@
 package com.example.hotelmanagmentsystem.controller;
 
-import com.example.hotelmanagmentsystem.dto.user.AddUserRequest;
-import com.example.hotelmanagmentsystem.dto.user.LoginRequest;
-import com.example.hotelmanagmentsystem.dto.user.UserResponse;
+import com.example.hotelmanagmentsystem.dto.user.*;
 import com.example.hotelmanagmentsystem.security.AuthService;
-import com.example.hotelmanagmentsystem.service.UserService;
+import com.example.hotelmanagmentsystem.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController
 {
    private final AuthService authService ;
+   private final RefreshTokenService refreshTokenService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
         this.authService = authService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("/register")
@@ -31,8 +28,22 @@ public class AuthController
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> register( @RequestBody @Valid LoginRequest loginRequest)
+    public ResponseEntity<TokenResponse> register(@RequestBody @Valid LoginRequest loginRequest)
     {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(refreshTokenService.refresh(refreshTokenRequest));
+    }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout ()
+    {
+        authService.logout();
+        return ResponseEntity.noContent().build() ;
+    }
+
 }
