@@ -8,8 +8,9 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "room"
-,uniqueConstraints = @UniqueConstraint(columnNames = {"number" , "hotel_id"}))
+@Table(name = "room",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"number" , "hotel_id"})
+)
 public class Room
 {
 
@@ -90,7 +91,6 @@ public class Room
                 ", number=" + number +
                 ", price=" + price +
                 ", roomStatus=" + roomStatus +
-                ", roomType=" + roomType +
                 '}';
     }
 }
